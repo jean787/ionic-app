@@ -1,7 +1,7 @@
 import { Result } from '../models/resultAuthenticated.model';
 import { User } from '../models/user.model';
 
-const API_URL = 'http://192.168.1.9:3027/users';
+const API_URL = 'http://192.168.0.102:3027/users';
 let options: any = {
   headers: {
     'Content-Type': 'application/json',

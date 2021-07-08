@@ -23,10 +23,15 @@ import { Storage } from '@capacitor/storage';
 
 const Profile: React.FC = () => {
   const [photoUrl, setPhotoUrl] = useState<string | undefined>();
-
+  const [email, setDataEmail] = useState<string | undefined>();
+  const [user, setDataUser] = useState<string | undefined>();
+  
   useIonViewWillEnter(async () => {
-    const { value } = await Storage.get({ key: 'LOOK_SLIDES' });
-    console.log(value);
+    const email = await Storage.get({ key : 'email'});
+    const user  = await Storage.get({ key : 'user'});
+
+    setDataEmail(email.value ? email.value : '');
+    setDataUser(user.value ? user.value : '');
   });
 
   const takePhoto = async () => {
@@ -64,8 +69,8 @@ const Profile: React.FC = () => {
                   }
                 />
               </IonAvatar>
-              <h1>Rick Sanchez</h1>
-              <h2>ricksanchez@gmail.com</h2>
+              <h1>{user}</h1>
+              <h2>{email}</h2>
             </IonCol>
           </IonRow>
         </IonGrid>

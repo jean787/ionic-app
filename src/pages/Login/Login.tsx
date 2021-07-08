@@ -5,8 +5,9 @@ import {
   IonInput,
   IonItem,
   IonPage,
+  IonToast,
 } from '@ionic/react';
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { SignIn } from '../../services/AuthenticationService';
 import { User } from '../../models/user.model';
 
@@ -16,6 +17,9 @@ import { Storage } from '@capacitor/storage';
 import ApplicationContext from '../../context/ApplicationContext';
 
 const Login: React.FC = () => {
+  const [message, setMessage] = useState<string>();
+  const [duration, setDuration] = useState<number>();
+
   const applicationContext = useContext(ApplicationContext);
   const refEmail = useRef<HTMLIonInputElement>(null);
   const refPassword = useRef<HTMLIonInputElement>(null);
@@ -30,12 +34,36 @@ const Login: React.FC = () => {
     };
     const resultSignIn: Result = await SignIn(userSignIn);
     if (resultSignIn.isAuthenticated) {
+  
+      let email = resultSignIn.data?.email;
+      let user = `${resultSignIn.data?.firstName} ${resultSignIn.data?.lastName}`
       Storage.set({ key: 'IS_AUTHENTICATED', value: 'true' });
+      Storage.set({ key: 'email', value: email ? email : ''});
+      Storage.set({ key: 'user', value: user ? user : ''});
       applicationContext.refreshAuthenticated();
     } else {
-      console.log(resultSignIn.message);
+      setMessage(resultSignIn.message);
+      setDuration(3000);
     }
   };
+
+  const validateEmail = async () => {
+    let email = refEmail.current?.value as string;
+    const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    if(!emailRegex.test(email)){
+      setMessage('Correo no valido');
+      setDuration(150);
+    }
+  };
+
+  const validatePassword = async ()=> {
+    let password = refPassword.current?.value as string;
+    const passwordRegex = /^[a-zA-Z0-9]{7,20}$/;
+    if(!passwordRegex.test(password)){
+      setMessage('La clave debe ser mayor a 6 caracteres');
+      setDuration(150);
+    }
+  }
 
   return (
     <IonPage>
@@ -54,7 +82,7 @@ const Login: React.FC = () => {
             type="email"
             placeholder="Correo Electronico"
             ref={refEmail}
-            value="rdelarosa@gmail.com"
+            onKeyUp={() => validateEmail()}
           />
         </IonItem>
         <IonItem lines="none" className="ion-item-login">
@@ -62,7 +90,7 @@ const Login: React.FC = () => {
             type="password"
             placeholder="Contraseña"
             ref={refPassword}
-            value="NewHorizons2021"
+            onKeyUp={() => validatePassword()}
           />
         </IonItem>
       </IonContent>
@@ -85,6 +113,16 @@ const Login: React.FC = () => {
         >
           Registrar
         </IonButton>
+
+        <IonToast
+          isOpen={message !== undefined}
+          onDidDismiss={() => {
+            setMessage(undefined);
+            setDuration(3000)
+          }}
+          message={message}
+          duration={duration}
+        />
       </IonFooter>
     </IonPage>
   );

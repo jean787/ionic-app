@@ -51,7 +51,7 @@
   },
   "scripts": {
     "client": "react-scripts start",
-    "server": "json-server --host 192.168.1.9 --port 3027 --watch server/users.json",
+    "server": "json-server --host 192.168.0.102 --port 3027 --watch server/users.json",
     "build": "react-scripts build",
     "resources": "capacitor-resources -p android,ios",
     "test": "react-scripts test",

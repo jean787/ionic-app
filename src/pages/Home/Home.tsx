@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonButtons,
   IonCard,
   IonCardContent,
@@ -9,6 +10,7 @@ import {
   IonContent,
   IonGrid,
   IonHeader,
+  IonIcon,
   IonMenuButton,
   IonPage,
   IonRow,
@@ -17,12 +19,16 @@ import {
   IonToolbar,
   useIonViewDidEnter,
 } from '@ionic/react';
-import { useContext } from 'react';
+import { arrowForwardOutline, chevronBackSharp, chevronForwardOutline } from 'ionicons/icons';
+import { useContext, useState } from 'react';
 import ApplicationContext from '../../context/ApplicationContext';
 import { Character } from '../../models/character.model';
 import './Home.css';
 
 const Home: React.FC = () => {
+
+  const [next, setNext] = useState<string | undefined>();
+  const [prev, setPrev] = useState<string | undefined | null>();
   const applicationContext = useContext(ApplicationContext);
 
   useIonViewDidEnter(() => {
@@ -30,10 +36,23 @@ const Home: React.FC = () => {
       const result = await fetch('https://rickandmortyapi.com/api/character');
       const data = await result.json();
       const resultCharacters: Character[] = data.results;
+      setNext(data.info.next);
+      setPrev(data.info.prev);
 
       /**ACTUALIZANDO EL ESTADO */
       applicationContext.refreshCharacters(resultCharacters);
     }, 3000);
+  });
+
+  const changePage = (async (url : any) => {
+    if(url != null && url != undefined){
+      const result = await fetch(url ? url : '');
+      const data = await result.json();
+      const resultCharacters: Character[] = data.results;
+      setNext(data.info.next);
+      setPrev(data.info.prev);
+      applicationContext.refreshCharacters(resultCharacters)
+    }
   });
 
   return (
@@ -90,6 +109,22 @@ const Home: React.FC = () => {
           </IonGrid>
         ) : (
           <IonGrid>
+            <IonRow>
+              <IonCol size="1"></IonCol>
+              <IonCol size="5">
+                <IonButton onClick={() =>changePage(prev)}>
+                  <IonIcon icon={chevronBackSharp} />
+                  Anterior
+                </IonButton>
+              </IonCol>
+              <IonCol size="5">
+                <IonButton onClick={() =>changePage(next)}>
+                  Siguiente
+                  <IonIcon icon={chevronForwardOutline}/>
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            
             {applicationContext.characters.map((item) => (
               <IonRow key={item.id}>
                 <IonCol className="ion-text-center">

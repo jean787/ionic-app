@@ -20,6 +20,34 @@
       "email": "pescobar@gmail.com",
       "password": "MTIzNDU2",
       "id": 300620212041
+    },
+    {
+      "firstName": "jean",
+      "lastName": "pier",
+      "email": "herr@gmail.com",
+      "password": "MTIzNDU2",
+      "id": 300620212042
+    },
+    {
+      "firstName": "jean",
+      "lastName": "piere",
+      "email": "herrerajean787@gmail.com",
+      "password": "MTIzNDU2",
+      "id": 300620212043
+    },
+    {
+      "firstName": "juanpablo",
+      "lastName": "herrerallerena",
+      "email": "juanca@gmail.com",
+      "password": "MTIzNDU2Nzg5",
+      "id": 300620212044
+    },
+    {
+      "firstName": "jeanpiere",
+      "lastName": "herrerallerena",
+      "email": "herrera@gmail.com",
+      "password": "MTIzNDU2Nw==",
+      "id": 300620212045
     }
   ]
 }
